@@ -13,6 +13,7 @@ import { useCrUXfetchHook } from "../hooks/useCrUXfetchHook";
 import { useDataListItems } from "../hooks/useDataListItems";
 import MetricListBox from "./MetricListBox";
 import { formFactors, metricLists } from "../constants/contants";
+import CustomizedDialogs from "./Dialog";
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
@@ -29,15 +30,16 @@ const Search = styled("div")(({ theme }) => ({
 }));
 function Feed() {
   const [url, setUrl] = React.useState("");
+  const [reset, setReset] = React.useState(false)
   const [metricType, setMetricType] = React.useState(metricLists);
   const [formTypes, setFormTypes] = React.useState(formFactors);
   // useCrUXfetchHook provides the lists of data's from API along with Other API's provided by React Query
-  const dataList = useCrUXfetchHook(url, formTypes, metricType);
+  const {dataList, isLoaded, error, errorMsg} = useCrUXfetchHook(url, formTypes, metricType);
+
 
   // useDataListItems destructuring the received data from useCrUXfetchHook. This will help to 
   // other use cases
   const { datListItems } = useDataListItems(dataList);
-  const [isSearchTriggered, setSearchTriggered] = React.useState(false);
 
   console.log("datListItems", datListItems);
 
@@ -49,10 +51,9 @@ function Feed() {
         datListItems[key]();
       }
     }
-    setSearchTriggered(true);
+    setReset(false);
   };
 
-  console.log("datListItems", datListItems);
   // const { isLoading, isFetching, data, refetch, error } = dataList[0];
   // const { isLoading: secondLoading, refetch: secondReFetch } = dataList[1];
   console.log(dataList);
@@ -70,7 +71,10 @@ function Feed() {
             <InputBase
               placeholder="search...."
               sx={{ width: "100%" }}
-              onChange={(e) => setUrl(e.target.value)}
+              onChange={(e) => {
+                setReset(true)
+                setUrl(e.target.value)
+              }}
             />
           </Search>
           <Button
@@ -85,11 +89,7 @@ function Feed() {
         </StyledToolbar>
       </Box>
       <Box>
-        {datListItems.isLoading0 ? (
-          <div>
-            <CircularProgress />
-          </div>
-        ) : (
+        
           <>
             <Box sx={{ display: "flex" }}>
               <MetricListBox
@@ -97,22 +97,28 @@ function Feed() {
                 setMetricType={setMetricType}
                 metricLists={metricLists}
                 name={"Metric"}
+                setReset={setReset}
+                handleSearchClick={handleSearchClick}
               />
               <MetricListBox
                 metricType={formTypes}
                 setMetricType={setFormTypes}
                 metricLists={formFactors}
                 name={"Form Type"}
+                setReset={setReset}
+                handleSearchClick={handleSearchClick}
               />
             </Box>
-            <TableData
-              url={url}
-              formFactors={formTypes}
-              metricType={metricType}
-              isSearchTriggered={isSearchTriggered}
-            />
+            {(error && !reset) && (<div><CustomizedDialogs errorMsg={errorMsg}/></div>)}
+            {(isLoaded && !reset)&& (
+              <TableData
+                url={url}
+                formFactors={formTypes}
+                metricType={metricType}
+              />
+            )}
           </>
-        )}
+        
       </Box>
     </Box>
   );

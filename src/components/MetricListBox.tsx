@@ -23,6 +23,8 @@ export default function MetricListBox({
   setMetricType,
   metricLists,
   name,
+  setReset,
+  handleSearchClick,
 }: any) {
   const handleChange = (event: SelectChangeEvent<typeof metricType>) => {
     const {
@@ -32,6 +34,8 @@ export default function MetricListBox({
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+    setReset(true);
+    handleSearchClick();
   };
 
   return (

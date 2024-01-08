@@ -13,6 +13,7 @@ export const Chart = ({ metricLists }: any) => {
 
   let seriesDataFinal: any = [];
 
+  console.log("items",items);
   // This function will return required data format to highchart
   function createSeries() {
     let seriesData = [];

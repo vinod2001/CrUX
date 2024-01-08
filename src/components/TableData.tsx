@@ -27,16 +27,16 @@ type Props = {
   url: string;
   formFactors: string[];
   metricType: string[];
-  isSearchTriggered: boolean;
+  isSearchTriggered?: boolean;
 };
 
 export default function TableData({
   url,
   formFactors,
   metricType,
-  isSearchTriggered,
+  //isSearchTriggered,
 }: Props) {
-  const dataList = useCrUXfetchHook(url, formFactors, metricType);
+  const {dataList, isLoaded} = useCrUXfetchHook(url, formFactors, metricType);
   const { datListItems } = useDataListItems(dataList);
   const [rows, setRows] = React.useState<any[]>([]);
 
@@ -72,6 +72,7 @@ export default function TableData({
   function createMetricLists() {
     for (let type in formFactors) {
       for (let i in allMetricLists.data) {
+        console.log("inside allMetricLists",allMetricLists.data)
         if (i.indexOf(formFactors[type]) > -1) {
           for (let key in allMetricLists.data[i]) {
             for (let histo in allMetricLists.data[i][key].histogram) {
@@ -86,6 +87,7 @@ export default function TableData({
               } else {
                 if (!listItems[0].hasOwnProperty([`${key}`])) {
                   listItems[0][`${key}`] = {};
+                  console.log("else if",listItems[0][`${key}`])
                 }
                 listItems[0][`${key}`][`${formFactors[type]}`] = [
                   allMetricLists.data[i][key].histogram[histo]?.density,
