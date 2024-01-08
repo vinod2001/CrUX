@@ -6,7 +6,7 @@ type Props = {
 };
 const fetchCrux = (url: string, type: string, metricLists: []) => {
   return axios.post(
-    "https://chromeuxreport.googleapis.com/v1/records:queryRecord?key=AIzaSyDrIHyCCaa9LgL1aToqlIEXN7WmRzepwog",
+    `https://chromeuxreport.googleapis.com/v1/records:queryRecord?key=${process.env.REACT_APP_API_KEY}`,
     {
       formFactor: type,
       origin: url,
