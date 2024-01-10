@@ -34,7 +34,8 @@ function Feed() {
   const [metricType, setMetricType] = React.useState(metricLists);
   const [formTypes, setFormTypes] = React.useState(formFactors);
   // useCrUXfetchHook provides the lists of data's from API along with Other API's provided by React Query
-  const {dataList, isLoaded, error, errorMsg} = useCrUXfetchHook(url, formTypes, metricType);
+  const {dataList, isLoaded, error, errorMsg} = useCrUXfetchHook(url, formTypes.sort(), metricType);
+
 
 
   // useDataListItems destructuring the received data from useCrUXfetchHook. This will help to 
@@ -46,8 +47,11 @@ function Feed() {
   //accessing refetch function provided through react query hook and listing them based on dataListItems
   // This function will trigger the API calls based on number of FormFactors
   const handleSearchClick = () => {
+    console.log()
     for (let key in datListItems) {
+      
       if (key.indexOf("refetch") > -1) {
+        console.log("handleSearchClick",key)
         datListItems[key]();
       }
     }

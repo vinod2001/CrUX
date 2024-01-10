@@ -38,6 +38,7 @@ export const useCrUXfetchHook: any = (
         retry : false,
         cache : false,
         stale : false,
+        refetchOnWindowFocus: false
       };
     }),
     // combine: (results) => {

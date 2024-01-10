@@ -28,6 +28,13 @@ export default function CustomizedDialogs({errorMsg}:any) {
     setOpen(false);
   };
 
+  React.useEffect(()=>{
+    if(errorMsg.length>0){
+      setOpen(true)
+    }
+  },[])
+  
+
   return (
     <React.Fragment>
       {/* <Button variant="outlined" onClick={handleClickOpen}>
@@ -55,7 +62,9 @@ export default function CustomizedDialogs({errorMsg}:any) {
         </IconButton>
         <DialogContent dividers>
           <Typography gutterBottom>
-          {`${errorMsg[0].type} Data is not Available`}
+          {errorMsg.map((value:any)=>(
+            `${value.type},`
+          ))} Data is not Available
           </Typography>
          
         </DialogContent>
